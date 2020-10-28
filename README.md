@@ -1,8 +1,8 @@
-VoiceMeeterAHK
+# VoiceMeeterAHK
 
 A autohotkey project to make a PTT and PTM system with voicemeeter.
 
-### Features:
+## Features
 
 * Push To Talk and Push To Mute with a single hotkey (default: `CapsLock`)
 * A shortcut to toggle between PTT and PTM mode (TBI).

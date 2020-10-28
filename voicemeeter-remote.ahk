@@ -1,10 +1,10 @@
-﻿#NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
+﻿#NoEnv ; Recommended for performance and compatibility with future AutoHotkey releases.
 ; #Warn  ; Enable warnings to assist with detecting common errors.
-SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
-SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
+SendMode Input ; Recommended for new scripts due to its superior speed and reliability.
+SetWorkingDir %A_ScriptDir% ; Ensures a consistent starting directory.
 #SingleInstance Force
 
-WinWait, ahk_exe voicemeeterpro.exe  ; wait for voicemeeter
+WinWait, ahk_exe voicemeeterpro.exe ; wait for voicemeeter
 
 DllLoad := DllCall("LoadLibrary", "Str", "C:\Program Files (x86)\VB\Voicemeeter\VoicemeeterRemote64.dll")
 
@@ -39,13 +39,11 @@ ApplyVolume(vol_lvl) {
     DllCall("VoicemeeterRemote64\VBVMR_IsParametersDirty")
 }
 
-
-
 ; redirect mic 1 to main output, mute mic 2
 CapsLock::
     Result := DllCall("VoicemeeterRemote64\VBVMR_SetParameterFloat", "AStr", "Strip[0].B1", "Float", 0.1)
     Result := DllCall("VoicemeeterRemote64\VBVMR_SetParameterFloat", "AStr", "Strip[0].Mute", "Float", 0.0)
-    
+
 return
 
 CapsLock Up::
@@ -53,6 +51,16 @@ CapsLock Up::
     Result := DllCall("VoicemeeterRemote64\VBVMR_SetParameterFloat", "AStr", "Strip[0].Mute", "Float", 1.0)
 return
 
+^CapsLock::
+    if GetKeyState("CapsLock", "T") = 1
+    {
+        SetCapsLockState, off
+    }
+    else if GetKeyState("CapsLock", "F") = 0
+    {
+        SetCapsLockState, on
+    }
+return
 
 Volume_Up::
     DllCall("VoicemeeterRemote64\VBVMR_IsParametersDirty")
@@ -66,12 +74,11 @@ return
 Volume_Down::
     DllCall("VoicemeeterRemote64\VBVMR_IsParametersDirty")
     Result := DllCall("VoicemeeterRemote64\VBVMR_GetParameterFloat", "AStr", "Bus[0].Gain", "Ptr", &vol_lvl)
-    
+
     vol_lvl := NumGet(vol_lvl, 0, "Float")
     vol_lvl -= 1.0
     ApplyVolume(vol_lvl)
 return
-
 
 GetStatu(){
     DllCall("VoicemeeterRemote64\VBVMR_IsParametersDirty")
@@ -83,12 +90,10 @@ GetStatu(){
     if (vol_lv2 == 1.0){
         TaskBar_SetAttr(0) 
     } else {
-        TaskBar_SetAttr(2, 0xff0f0f91)   
+        TaskBar_SetAttr(2, 0xff0f0f91) 
     }
-    return
+return
 }
-
-
 
 ; switch audio devices
 XButton2::
@@ -128,7 +133,7 @@ TaskBar_SetAttr(accent_state := 0, gradient_color := "0x01000000")
     && NumPut(accent_size, WINCOMPATTRDATA, 4 + pad + A_PtrSize, "uint")
     if !(DllCall("user32\SetWindowCompositionAttribute", "ptr", hTrayWnd, "ptr", &WINCOMPATTRDATA))
         throw Exception("Failed to set transparency / blur", -1)
-    return true
+return true
 }
 
 ; ===============================================================================================================================
